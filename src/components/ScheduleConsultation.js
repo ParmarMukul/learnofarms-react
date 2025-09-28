@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -23,8 +24,25 @@ export default function ScheduleConsultation() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement your API or form submission logic here
-    setSubmitted(true);
+
+    // ✅ send email using EmailJS
+    emailjs
+      .send(
+        "LearnoFarmsEmailService",   // replace with your EmailJS service ID
+        "scheduleConsultation",  // replace with your EmailJS template ID
+        formData,            // the data object
+        "NtknOStIlttWueZou"    // replace with your EmailJS public key
+      )
+      .then(
+        (result) => {
+          console.log("Email sent:", result.text);
+          setSubmitted(true);
+        },
+        (error) => {
+          console.error("Email failed:", error.text);
+          alert("Failed to send email. Please try again later.");
+        }
+      );
   };
 
   return (
